@@ -1,0 +1,12 @@
+@import 'https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@120&display=swap';
+
+header {
+    background-color: lavender;
+    height: 5em;
+    box-shadow: 0px 1px 2px 1px rgba(180, 180, 180, 0.5);
+    font-family: 'M PLUS 1p';
+}
+
+header p {
+    color: dimgray;
+}
