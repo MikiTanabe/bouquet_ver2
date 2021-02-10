@@ -1,0 +1,26 @@
+#docker-composeバージョン指定
+version: "3.7"
+
+volumes:
+ #node_module用volume
+ vue-cli-node-volume:
+
+services:
+ #コンテナ詳細
+ app:
+  image: vuecli:1
+  build:
+   context: .
+   dockerfile: Dockerfile
+  container_name: vuecli3
+  ports:
+  - "18080:8080"
+  volumes:
+   #node_moduleを入れるボリューム
+   - vue-cli-node-volume:/app/node_modules
+
+   #コンテナ内の指定ディレクトリをホスト側を同期
+   - .:/app/
+  #-it
+  stdin_open: true
+  tty: true
