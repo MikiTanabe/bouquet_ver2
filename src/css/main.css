@@ -1,4 +1,8 @@
-@import 'https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@120&display=swap';
+@import 'https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@120&display=swap'; */
+
+body {
+    font-family: 'M PLUS 1p';
+}
 
 header {
     background-color: lavender;
@@ -9,4 +13,36 @@ header {
 
 header p {
     color: dimgray;
+}
+
+/* 見出し要素 */
+h1 {
+    color: #882954;
+    font-size: 1.5em;
+}
+
+h2 {
+    color: #882954;
+    font-size: 1em;
+}
+
+/* 色指定 */
+.cl-darkpink {
+    color: #c73576;
+}
+
+/* リンク装飾 */
+.notice-link {
+    color: #c73576;
+    border-bottom: 1px solid #c73576;
+}
+
+.notice-link :hover {
+    color: #c73576;
+    border-bottom: 1px #c73576;
+}
+
+.notice-link :active {
+    color: #7c294f;
+    border-bottom: none;
 }

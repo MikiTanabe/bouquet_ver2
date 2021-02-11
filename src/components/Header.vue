@@ -1,13 +1,13 @@
 <template>
     <header class="stickey-top">
         <div class="container">
-            <div class="col-12 d-flex content-items-center">
+            <div class="col-12 d-flex justify-content-between align-content-end">
                 <div>
                     <p>イメージコンサルティングのイベント・サロン交流サイト Bouquet</p>
                     <img src="">
                 </div>
-                <div>
-                    <p><span class="cl-darkpink">▶︎</span><router-link to="mypage">{{ login-str }}</router-link></p>
+                <div class="align-self-end">
+                    <p><span class="cl-darkpink">▶︎</span><router-link :to="urlStr" class="notice-link">{{ loginStr }}</router-link></p>
                 </div>
             </div>
         </div>
@@ -16,19 +16,28 @@
 <script>
     export default {
         name: 'Header',
+        props: {
+            prAuth: {
+                type: Boolean,
+                default: false
+            }
+        },
         computed: {
+            auth: function () {
+                return this.prAuth
+            },
             loginStr: function () {
-                if(1) {
+                if(!this.auth) {
                     return 'ログイン／新規登録'
                 } else {
                     return 'マイページ'
                 }
             },
             urlStr: function () {
-                if(1) {
-                    return 'signin'
+                if(!this.auth) {
+                    return '/signin'
                 } else {
-                    return 'home'
+                    return '/mypage/mypagehome'
                 }
             }
         }
