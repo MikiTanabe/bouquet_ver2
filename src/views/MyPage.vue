@@ -12,11 +12,19 @@
 </template>
 <script>
     import MenuLeftBar from '@/components/MenuLeftBar'
+    import firebase from '@/firebase/firestore'
 
     export default {
         name: 'MyPage',
         components: {
             MenuLeftBar
+        },
+        mounted() {
+            firebase.auth().onAuthStateChanged(user => {
+                if(!user){
+                    this.$router.push('/signin')
+                }
+            })
         }
     }
 </script>
@@ -37,7 +45,7 @@
     @media screen and (min-width: 768px){
         .mypage-container {
             display: grid;
-            grid-template-columns: 20em 100%;
+            grid-template-columns: 16em 100%;
             grid-template-rows: 100%;
         }
     }

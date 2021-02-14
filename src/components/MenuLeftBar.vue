@@ -1,23 +1,28 @@
 <template>
     <div class="col-12">
-        <p class="small">{{ greet }}</p>
-        <h2>メニュー</h2>
+        <p class="small" v-if="user !== 'undefined'">{{ greet }}</p>
+        <h2 class="font-h2">メニュー</h2>
         <ul>
             <li>イベントの管理</li>
             <li>コンサルタントプロフィール</li>
             <li>マイサロン</li>
+            <li>アカウント情報</li>
             <li class="mt-1"><a href="javascript:void(0)" @click="signout" class="notice-link">サインアウト</a></li>
         </ul>
-        <h2>管理メニュー</h2>
+        <h2 class="font-h2">管理メニュー</h2>
         <ul>
             <li>お問い合わせ</li>
             <li>運営からのお知らせ</li>
-            <li>公式Instagram / 公式Twitter</li>
+            <li>
+                <fa-icon :icon="['fab', 'instagram-square']" class="icon mr-2" />
+                <fa-icon :icon="['fab', 'twitter']" color="#1DA1F2" class="icon " />
+            </li>
         </ul>
     </div>
 </template>
 <script>
-    import { getuser } from '@/scripts/user'
+    import { getUser } from '@/scripts/user'
+    import { signOut } from '@/scripts/auth'
 
     export default {
         name: 'MenuLeftBar',
@@ -62,11 +67,16 @@
         },
         methods: {
             signout: function () {
-                //TODO: サインアウト
+                signOut().then(() => {
+                    this.$router.push('/').catch({})
+                }).catch(e => {
+                    console.log('Signount failed: ', e)
+                    alert('サインアウト中にエラーが発生しました。時間を置いて再度お試しください。')
+                })
             }
         },
-        created() {
-            this.user = getuser()
+        mounted() {
+            this.user = getUser()
         }
     }
 </script>
@@ -74,5 +84,9 @@
     li {
         list-style: none;
         margin-left: -1.5em;
+    }
+
+    .icon {
+        font-size: 1.8em;
     }
 </style>

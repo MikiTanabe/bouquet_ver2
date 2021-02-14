@@ -26,10 +26,7 @@ export default {
         signIn: function () {
             firebase.auth().signInWithEmailAndPassword(this.email, this.password)
             .then(() => {
-                this.$router.push('/home/mypagetop')
-            })
-            .catch((error) => {
-                alert(error.message)
+                this.$router.push('/mypage/mypagehome')
             })
         }
     }

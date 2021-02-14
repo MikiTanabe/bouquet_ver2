@@ -1,11 +1,12 @@
-import { auth } from '@/firebase/firestore.js'
+import firebase from '@/firebase/firestore.js'
 
-export function getuser () {
-    let mapUser = new Map()
-    console.log('ファイアベースオーセンティケイション: ', auth.currentUser)
-    if (auth.currentUser.uid) {
-        mapUser.set('id', auth.currentUser.uid)
-        mapUser.set('name', auth.currentUser.displayName)
+export function getUser () {
+    var mapUser = new Map()
+    const user = firebase.auth().currentUser
+    if (user) {
+        mapUser.set('id', user.uid)
+        //console.log(user.displayName)
+        mapUser.set('name', user.displayName)
     }
     return mapUser
 }
