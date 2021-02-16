@@ -7,6 +7,7 @@ import MyPageHome from '@/views/MyPageHome.vue'
 import EventTop from '@/views/EventTop.vue'
 import EventPage from '@/views/EventPage.vue'
 import SalonPage from '@/views/SalonPage.vue'
+import ConsultantProfile from '@/views/ConsultantProfile.vue'
 import { auth } from '@/firebase/firestore'
 
 Vue.use(Router)
@@ -35,6 +36,12 @@ let router = new Router({
             path: '/salonpage',
             name: 'SalonPage',
             component: SalonPage,
+            props: true
+        },
+        {
+            path: '/consultantprofile',
+            name: 'ConsultantProfile',
+            component: ConsultantProfile,
             props: true
         },
         {

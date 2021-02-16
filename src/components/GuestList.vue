@@ -14,6 +14,7 @@
 <script>
     import { db } from '@/firebase/firestore'
     import { getSalonDataUid } from '@/scripts/data'
+    import { pushConsultantProfile } from '@/scripts/routerPush'
 
     export default {
         name: 'GuestList',
@@ -77,6 +78,13 @@
                     alert('エラーが発生しました。トップページに戻ります。', e)
                     this.$router.push('/').catch({})
                 })
+            },
+            guestClick: function (uId) {
+                var objConsultantData = Object.assign(this.arrGuests.filter(consultant => {
+                    return consultant.uid == uId
+                }))
+                delete objConsultantData[0].id
+                pushConsultantProfile(this, objConsultantData[0])
             }
         }
     }

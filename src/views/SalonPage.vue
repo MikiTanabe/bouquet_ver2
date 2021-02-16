@@ -11,15 +11,15 @@
             </div>
             <p class="col-8 menu">{{ menuStr }}</p>
             <div class="d-flex align-items-center justify-content-start">
-                <p class="name mt-3">{{ objSalonData.name }}</p>
-                <div class="area-box d-flex mt-n2 ml-2">
+                <p class="name">{{ objSalonData.name }}</p>
+                <div class="area-box d-flex ml-2 mt-n2">
                     <p class="my-auto mx-2">{{ objSalonData.prefecture.name }} {{ objSalonData.subArea }}</p>
                 </div>
                 <p class="station ml-2 mt-3" v-if="stationStr!=''">最寄駅: {{ stationStr }}駅</p>
             </div>
             <div>
                 <p>予約方法: {{ objSalonData.booking }}</p>
-                <p>オーナー: {{ ornerName }}</p>
+                <p>オーナー: <a href="javascript:void(0)" @click="clickOrner" class="notice-link">{{ ornerName }}</a></p>
             </div>
         </div>
     </div>
@@ -27,6 +27,7 @@
 <script>
     import { db } from '@/firebase/firestore'
     import { generateMenuStr } from '@/scripts/functions'
+    import { pushConsultantProfile } from '@/scripts/routerPush'
 
     export default {
         name: 'SalonPage',
@@ -62,16 +63,9 @@
                 return this.objConsultantData.consulName
             }
         },
-        watch: {
-            //TODO: 発火させる
-            prObjSalon: async function(newVal) {
-                this.objConsultantData = await this.getConsultantData(newVal.userID)
-            }
-        },
         methods: {
             getConsultantData: async function (uid) {
                 return new Promise(resolve => {
-                    console.log('コンサルタントデータを取得する　ID: ', uid)
                     const docRef = db.collection('consultants').where('uid', '==', uid)
                     docRef.get().then(docSnap => {
                         docSnap.forEach(doc => {
@@ -81,13 +75,17 @@
                         })
                     })
                 })
+            },
+            clickOrner: function () {
+                pushConsultantProfile(this, this.objConsultantData)
             }
+        },
+        mounted: async function () {
+            this.objConsultantData = await this.getConsultantData(this.objSalonData.userID)
         }
     }
 </script>
 <style scoped>
-    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Kosugi&display=swap');
-
     .name {
         color: #999999;
         font-family: 'Kosugi', sans-serif;
