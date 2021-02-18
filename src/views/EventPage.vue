@@ -19,7 +19,7 @@
                         <tbody>
                             <tr><td>開催日: </td><td>{{ objEventData.date }}</td></tr>
                             <tr v-if="objEventData.txtUrl!='イベントURL'&&objEventData.txtUrl!=='undefined'"><td>イベントURL: </td><td>{{ objEventData.txtUrl }}</td></tr>
-                            <tr><td>主催者: </td><td><a href="javascript:void(0)" @click="hostClick(objEventData.uid)" class="notice-link">{{ objEventData.consultantName }}</a><span v-if="objEventData.salonName!='サロン名'"> / {{ objEventData.salonName }}</span></td></tr>
+                            <tr><td>主催者: </td><td><a href="javascript:void(0)" @click="hostClick(objEventData.uid)" class="notice-link">{{ objEventData.consultantName }}</a><span v-if="objEventData.salonName!='サロン名'"> / <a href="javascript:void(0)" @click="hostSalonClick" class="notice-link">{{ objEventData.salonName }}</a></span></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -35,6 +35,9 @@
     import { db } from '@/firebase/firestore'
     import { formatDate } from '@/scripts/functions'
     import GuestList from '@/components/GuestList.vue'
+    import { pushSalonPage, pushConsultantProfile } from '@/scripts/routerPush'
+
+    const componentName = 'EventPage'
 
     /* indexedDB設定
     const IDBKey = 'eventpage'
@@ -46,7 +49,7 @@
     */
 
     export default {
-        name: 'EventPage',
+        name: componentName,
         components: {
             GuestList
         },
@@ -87,14 +90,29 @@
                     })
                 })
             },
-            hostClick: function (cid) {
-                let objLink = {
-                    name: 'ProfilePageCh',
-                    params: {
-                        prCid: cid
-                    }
-                }
-                this.$router.push(objLink).catch({})
+            hostClick: async function () {
+               const docRef = db.collection('consultants')
+               let query = docRef.where('uid', '==', this.objEventData.uid)
+               var objConsultantData = await query.get().then(docSnap => {
+                   return new Promise(resolve => {
+                        docSnap.forEach(doc => {
+                            resolve(Object.assign(doc.data()))
+                        })
+                   })
+               })
+               pushConsultantProfile(this, objConsultantData)
+            },
+            hostSalonClick: async function () {
+                const docRef = await db.collection('salons')
+                let query = docRef.where('userID', '==', this.objEventData.uid)
+                var objSalonData = await query.get().then(docSnap => {
+                    return new Promise(resolve => {
+                        docSnap.forEach(doc => {
+                            resolve(Object.assign(doc.data()))
+                        })
+                    })    
+                })
+                pushSalonPage(this, objSalonData)
             }
         },
         mounted() {
@@ -105,7 +123,7 @@
         }
     }
 </script>
-<style>
+<style scoped>
     @import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
 
     h3 {

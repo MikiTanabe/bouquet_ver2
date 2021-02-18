@@ -4,6 +4,8 @@
         <information-bar />
         <h3 class="mt-4">参加予定のイベント</h3>
         <join-event-list />
+        <h3 class="mt-4">主催イベント</h3>
+        <!-- TODO: 追加　有効化　<hold-event-list /> -->
     </div>
 </template>
 <script>

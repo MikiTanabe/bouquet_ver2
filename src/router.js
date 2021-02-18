@@ -73,7 +73,13 @@ let router = new Router({
                     name: 'SalonPageCh',
                     component: SalonPage,
                     props: true
-                }
+                },
+                {
+                    path: 'consultantprofile',
+                    name: 'ConsultantProfileCh',
+                    component: ConsultantProfile,
+                    props: true
+                },
             ]
         }
     ]

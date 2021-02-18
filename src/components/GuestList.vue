@@ -14,7 +14,7 @@
 <script>
     import { db } from '@/firebase/firestore'
     import { getSalonDataUid } from '@/scripts/data'
-    import { pushConsultantProfile } from '@/scripts/routerPush'
+    import { pushConsultantProfile, pushSalonPage } from '@/scripts/routerPush'
 
     export default {
         name: 'GuestList',
@@ -65,19 +65,9 @@
                 }
                 this.arrGuests = wkArray.concat()
             },
-            salonClick: function (uId) {
-                getSalonDataUid(uId).then(obj => {
-                    let objLink = {
-                        name: 'SalonPageCh',
-                        params: {
-                            prObjSalon: obj
-                        }
-                    }
-                    this.$router.push(objLink).catch({})
-                }).catch((e) => {
-                    alert('エラーが発生しました。トップページに戻ります。', e)
-                    this.$router.push('/').catch({})
-                })
+            salonClick: async function (uId) {
+                var objSalonData = await getSalonDataUid(uId)
+                pushSalonPage(this, objSalonData)
             },
             guestClick: function (uId) {
                 var objConsultantData = Object.assign(this.arrGuests.filter(consultant => {
