@@ -47,7 +47,7 @@
                             let objEvent = {
                                 id: doc.id,
                                 title: doc.get('title'),
-                                date: formatDate ( doc.get('date').toDate(), '-' ),
+                                date: formatDate( doc.get('date').toDate(), '-' ),
                                 timestamp: doc.get('date'),
                                 introduction: doc.get('introduction'),
                                 hostName: doc.get('consultantName'),

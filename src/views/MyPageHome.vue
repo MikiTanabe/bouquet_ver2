@@ -5,18 +5,21 @@
         <h3 class="mt-4">参加予定のイベント</h3>
         <join-event-list />
         <h3 class="mt-4">主催イベント</h3>
-        <!-- TODO: 追加　有効化　<hold-event-list /> -->
+        <hold-event-list />
+        <!-- サロンパネル作成、設置 <salon-info-panel /> -->
     </div>
 </template>
 <script>
     import InformationBar from '@/components/InformationBar.vue'
     import JoinEventList from '@/components/JoinEventList.vue'
+    import HoldEventList from '@/components/HoldEventList.vue'
 
     export default {
         name: 'MyPageHome',
         components: {
             InformationBar,
-            JoinEventList
+            JoinEventList,
+            HoldEventList
         }
     }
 </script>
