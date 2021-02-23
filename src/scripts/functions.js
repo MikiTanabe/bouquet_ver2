@@ -47,3 +47,18 @@ export function generateMenuStr(objMenu){
     })
     return menuStr.slice(0, -1)
 }
+
+//Objectをリアクティブにコピーする
+export function copyObjectReactive(objOrigin, objCopy, instance) {
+    Object.keys(objOrigin).forEach(key => {
+        instance.$set(objCopy, key, objOrigin[key])
+    })
+}
+
+//空白区切りの文字列を配列に変換する
+export function whitespaceSplit(str) {
+    console.log(str)
+    //TODO: 空白文字 全角半角問わず有効にする
+    var digit = /[\s\S]+/
+    return str.split(digit)
+}

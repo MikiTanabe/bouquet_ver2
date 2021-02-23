@@ -1,6 +1,6 @@
 <template>
     <div class="form-group">
-        <label>
+        <label class="col-12">
             <p>イメージ画像(最大サイズ: {{ imgSizeStr }}MB) ファイルタイプ: .jpeg/.png</p>
             <img :src="prevImgUrl" class="img-fluid mb-1">
             <input type="file" id="img" ref="file" @change="imgSelected">
@@ -50,6 +50,11 @@
                 default: ''
             }
         },
+        watch: {
+            preview: function (newVal) {
+                this.prevImgUrl = newVal
+            }
+        },
         methods: {
             imgSelected: async function (event) {
                 const files = event.target.files || event.dataTransfer.files
@@ -72,8 +77,7 @@
                 }
             }
         },
-        created() {
-            //TODO: 初回読み込み時プレビューを表示する
+        mounted() {
             this.prevImgUrl = this.preview
         }
     }

@@ -1,20 +1,16 @@
 <template>
-    <header class="stickey-top">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 d-flex justify-content-between">
-                    <div class="d-flex flex-column align-items-stretch">
-                        <p class="small md-medium">イメージコンサルティングのイベント・サロン交流サイト</p>
-                        <p><router-link to="/">Bouquet</router-link></p>
-                        <img src="">
-                    </div>
-                    <div class="align-self-end">
-                        <p><span class="cl-darkpink">▶︎</span><router-link :to="urlStr" class="notice-link">{{ loginStr }}</router-link></p>
-                    </div>
+        <header class="stickey-top">
+            <div class="col-12 d-flex align-items-end">
+                <div class="d-flex flex-column justify-content-start">
+                    <p class="small md-medium">イメージコンサルティングのイベント・サロン交流サイト</p>
+                    <p><router-link to="/">Bouquet</router-link></p>
+                    <img src="">
+                </div>
+                <div class="align-self-end">
+                    <p><span class="cl-darkpink">▶︎</span><router-link :to="urlStr" class="notice-link">{{ loginStr }}</router-link></p>
                 </div>
             </div>
-        </div>
-    </header>
+        </header>
 </template>
 <script>
     import firebase from '@/firebase/firestore'

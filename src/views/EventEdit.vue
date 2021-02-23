@@ -1,39 +1,44 @@
 <template>
     <div>
+        <!-- TODO: 検索ウィンドウ＆検索機能 -->
         <div class="col-12">
             <h3>{{ titleTxt }}</h3>
             <form>
                 <div class="form-group">
-                    <label>
+                    <label class="col-12 col-md-10">
                         <p>イベント名</p>
                         <input type="text" id="title" class="form-control" placeholder="新規イベント" v-model="title">
                     </label>
                 </div>
                 <div class="form-group">
-                    <label>
+                    <label class="col-10">
                         <p>開催日</p>
                         <input type="date" id="date" class="form-control" v-model="date">
                     </label>
                 </div>
-                <upload-img-form :prNumStorage="numStorage" :id="evId" :preview="imgUrl" @uploaded="getImgUrl" />
+                <upload-img-form :prNumStorage="numStorage" :id="evId" :preview="prevImgUrl" @uploaded="getImgUrl" />
                 <div class="form-group">
-                    <label>
+                    <label class="col-10">
                         <p>案内文</p>
                         <textarea id="introduction" v-model="introduction" class="form-control"></textarea>
                     </label>
                 </div>
                 <div class="form-group">
-                    <label>
+                    <label class="col-10">
                         <p>イベントURL(Youtubeチャンネル、イベント告知ページ等)</p>
                         <input type="text" id="txt-url" class="form-control" v-model="txtUrl" placeholder="https://">
                     </label>
                 </div>
                 <div class="form-group">
-                    <label>
+                    <label class="col-10">
                         <p>参加者</p>
                         <select name="join" :size="arrGuests.length" class="form-control" multiple>
                             <option v-for="guest in arrGuests" :key="guest.id" :value="guest.id" :label="guest.name + ' / ' + guest.salonName"></option>
                         </select>
+                        <div class="mt-1 d-flex">
+                            <add-guest-window @click="getNewGuests"/>
+                            <red-button @click="click" :disabled="true">招待取消</red-button>
+                        </div>
                     </label>
                 </div>
             </form>
@@ -43,21 +48,28 @@
 <script>
 import { db } from '@/firebase/firestore'
 import format from '@/scripts/eventsFormat.json'
-import { formatDate, bqDateParse } from '@/scripts/functions'
+import { formatDate, bqDateParse, copyObjectReactive } from '@/scripts/functions'
 import UploadImgForm from '@/components/UploadImgForm'
 import { storageNumbers } from '@/scripts/picture'
- 
+import RedButton from '@/components/RedButton'
+//import BlueButton from '@/components/BlueButton'
+import AddGuestWindow from '@/components/AddGuestWindow'
+
     export default {
         name: 'EventEdit',
         data() {
             return {
                 objEventData: format,
                 numStorage: storageNumbers.EVENT,
-                arrGuests: new Array()
+                arrGuests: new Array(),
+                prevImgUrl: ''
             }
         },
         components: {
-            UploadImgForm
+            UploadImgForm,
+            RedButton,
+            //BlueButton,
+            AddGuestWindow
         },
         computed: {
             titleTxt: function () {
@@ -68,7 +80,7 @@ import { storageNumbers } from '@/scripts/picture'
             },
             consultantName: {
                 set: function (val) {
-                    this.objEventData.consultantName = val
+                    this.$set(this.objEventData, 'consultantName', val)
                 },
                 get: function () {
                     return this.objEventData.consultantName
@@ -88,7 +100,7 @@ import { storageNumbers } from '@/scripts/picture'
             },
             delete: {
                 set: function (val) {
-                    this.objEventData.delete = val == ''? new Array(): val
+                    this.$set(this.objEventData, 'delete', val == ''? new Array(): val)
                 },
                 get: function () {
                     return this.objEventData.delete == ''? new Array(): this.objEventData.delete
@@ -96,7 +108,7 @@ import { storageNumbers } from '@/scripts/picture'
             },
             imgUrl: {
                 set: function (val) {
-                    this.objEventData.imgUrl = val
+                    this.$set(this.objEventData, 'imgUrl', val)
                 },
                 get: function () {
                     return this.objEventData.imgUrl
@@ -104,7 +116,7 @@ import { storageNumbers } from '@/scripts/picture'
             },
             introduction: {
                 set: function (val) {
-                    this.objEventData.introduction = val
+                    this.$set(this.objEventData, 'introduction', val)
                 },
                 get: function () {
                     return this.objEventData.introduction
@@ -112,7 +124,7 @@ import { storageNumbers } from '@/scripts/picture'
             },
             join: {
                 set: function (val) {
-                    this.objEventData.join = val == ''? new Array(): val
+                    this.$set(this.objEventData, 'join', val == ''? new Array(): val)
                 },
                 get: function () {
                     return this.objEventData.join == ''? new Array(): this.objEventData.join
@@ -120,7 +132,7 @@ import { storageNumbers } from '@/scripts/picture'
             },
             preJoin: {
                 set: function (val) {
-                    this.objEventData.preJoin = val == ''? new Array(): val
+                    this.$set(this.objEventData, 'preJoin', val == ''? new Array(): val)
                 },
                 get: function () {
                     return this.objEventData.preJoin == ''? new Array(): this.objEventData.preJoin
@@ -128,7 +140,7 @@ import { storageNumbers } from '@/scripts/picture'
             },
             salonId: {
                 set: function (val) {
-                    this.objEventData.salonId = val
+                    this.$set(this.objEventData, 'salonId', val)
                 },
                 get: function () {
                     return this.objEventData.salonId
@@ -136,7 +148,7 @@ import { storageNumbers } from '@/scripts/picture'
             },
             salonName: {
                 set: function (val) {
-                    this.objEventData.salonName = val
+                    this.$set(this.objEventData, 'salonName', val)
                 },
                 get: function () {
                     return this.objEventData.salonName
@@ -144,7 +156,7 @@ import { storageNumbers } from '@/scripts/picture'
             },
             title: {
                 set: function (val) {
-                    this.objEventData.salonName = val
+                    this.$set(this.objEventData, 'salonName', val)
                 },
                 get: function () {
                     return this.objEventData.title
@@ -152,7 +164,7 @@ import { storageNumbers } from '@/scripts/picture'
             },
             txtUrl: {
                 set: function (val) {
-                    this.objEventData.txtUrl = val
+                    this.$set(this.objEventData, 'txtUrl', val)
                 },
                 get: function () {
                     return this.objEventData.txtUrl
@@ -160,7 +172,7 @@ import { storageNumbers } from '@/scripts/picture'
             },
             uid: {
                 set: function (val) {
-                    this.objEventData.uid = val
+                    this.$set(this.objEventData, 'uid', val)
                 },
                 get: function () {
                     return this.objEventData.uid
@@ -168,7 +180,7 @@ import { storageNumbers } from '@/scripts/picture'
             },
             upDate: {
                 set: function (val) {
-                    this.objEventData.upDate = val
+                    this.$set(this.objEventData, 'upDate', val)
                 },
                 get: function () {
                     return this.objEventData.upDate
@@ -198,7 +210,8 @@ import { storageNumbers } from '@/scripts/picture'
                     const docRef = db.collection('events').doc(this.evId)
                     docRef.get().then(doc => {
                         if(doc.exists){
-                            this.objEventData = doc.data()
+                            //this.objEventData = doc.data()
+                            copyObjectReactive(doc.data(), this.objEventData, this)
                             this.prevImgUrl = doc.get('imgUrl')
                         }
                         resolve()
@@ -238,32 +251,40 @@ import { storageNumbers } from '@/scripts/picture'
                         })
                     })
                 }
+            },
+            click: function () {
+                alert('ボタンクリック')
+            },
+            getNewGuests: function (val) {
+                console.log('追加するゲスト: ', val)
             }
         },
-        created: async function () {
+        mounted: async function () {
             await this.getEventData()
-            //TODO: プレビュー画像の初回表示
-            this.objEventData = Object.assign(this.objEventData)
             await this.getGuestsName()
         }
     }
 </script>
 <style scoped>
     #introduction {
-        width: 23em;
         height: 10em;
     }
 
     @media screen and (min-width: 768px) {
         #introduction {
-            width: 35em;
             height: 6em;
         }
     }
 
     @media screen and (min-width: 992px) {
-        #introduction {
-            width: 40em;
-        }
+        
+    }
+
+    label {
+        margin-bottom: -0.1em;
+    }
+
+    label p {
+        margin-bottom: -0.1em;
     }
 </style>

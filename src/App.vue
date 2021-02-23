@@ -1,13 +1,11 @@
 <template>
   <div>
     <Header />
-    <body>
-      <div class="container">
-        <div class="pt-3">
-          <router-view />
-        </div>
+    <div class="container">
+      <div class="pt-3">
+        <router-view />
       </div>
-    </body>
+    </div>
     <!-- <Footer /> -->
   </div>
 </template>

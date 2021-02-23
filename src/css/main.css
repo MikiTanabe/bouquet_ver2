@@ -6,13 +6,45 @@ body {
 
 header {
     background-color: lavender;
-    height: 4.5em;
+    height: 5em;
     box-shadow: 0px 1px 2px 1px rgba(180, 180, 180, 0.5);
     font-family: 'M PLUS 1p', sans-serif;
+    width: 100%;
 }
 
 header p {
     color: dimgray;
+}
+
+/** ボタン **/
+button:disabled {
+    background: lightgray;
+    color: gray;
+}
+
+/* 緑ボタン */
+.btn-green {
+    background: #236d46;
+    color: white;
+    border: solid 1px #236d46;
+}
+
+.btn-green :hover {
+    background: white;
+    color: #236d46;
+}
+
+/* グレーボタン */
+.btn-gray {
+    background: white;
+    color: gray;
+    border: solid 1px gray;
+}
+
+.btn-gray :hover {
+    background: lightgray;
+    border: solid 1px lightgray;
+    color: white;
 }
 
 /* 見出し要素 */
