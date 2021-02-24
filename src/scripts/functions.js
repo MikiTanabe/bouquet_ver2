@@ -38,7 +38,6 @@ export function sortObjectArrayTS (array) {
 
 //メニュー配列を文字列に変換する
 export function generateMenuStr(objMenu){
-
     var menuStr = ''
     Object.keys(objMenu).forEach(key => {
         objMenu[key].forEach(menu => {
@@ -59,6 +58,6 @@ export function copyObjectReactive(objOrigin, objCopy, instance) {
 export function whitespaceSplit(str) {
     console.log(str)
     //TODO: 空白文字 全角半角問わず有効にする
-    var digit = /[\s\S]+/
+    var digit = /[\s\u3000]+/
     return str.split(digit)
 }
