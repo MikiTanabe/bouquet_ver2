@@ -11,8 +11,8 @@ export function formatDate ( date, strDigit ) {
     return rtnDate
 }
 
+//YYYY-MM-DD用
 export function bqDateParse ( strDate ) {
-    //YYYY-MM-DD用
     let year = strDate.substr( 0, 4 )
     let month = strDate.substr( 5, 2 ) - 1
     let date = strDate.substr( 8, 2 )

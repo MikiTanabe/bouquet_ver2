@@ -46,8 +46,8 @@
                 if(this.arrNewGuest.length < 1) {
                     alert('追加するゲストユーザーを選択してください')
                     //TODO: ウィンドウを閉じない
-                    return true
                 } else {
+                    const modalName = '#' + this.targetName
                     console.log('選択したユーザー: ', this.arrNewGuest)
                     this.$emit('click', this.arrNewGuest.concat())
                     this.arrNewGuest.splice(0)
@@ -55,7 +55,7 @@
                     this.strSearch = ''
                     this.booFound = true
                     this.hasError = false
-                    return false
+                    $( modalName ).modal('hide')
                 }
             },
             searchClick: function () {

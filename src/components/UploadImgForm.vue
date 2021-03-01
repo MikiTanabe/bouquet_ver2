@@ -3,7 +3,7 @@
         <label class="col-12">
             <p>イメージ画像(最大サイズ: {{ imgSizeStr }}MB) ファイルタイプ: .jpeg/.png</p>
             <img :src="prevImgUrl" class="img-fluid mb-1">
-            <input type="file" id="img" ref="file" @change="imgSelected">
+            <input type="file" id="img" ref="file" @change="imgSelected" class="d-block">
             <p class="errorMsg">{{ imgErrorMsg }}</p>
         </label>
     </div>

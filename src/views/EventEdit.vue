@@ -1,6 +1,5 @@
 <template>
     <div>
-        <!-- TODO: 検索ウィンドウ＆検索機能 -->
         <div class="col-12">
             <h3>{{ titleTxt }}</h3>
             <form>
@@ -16,7 +15,7 @@
                         <input type="date" id="date" class="form-control" v-model="date">
                     </label>
                 </div>
-                <upload-img-form :prNumStorage="numStorage" :id="evId" :preview="prevImgUrl" @uploaded="getImgUrl" />
+                <upload-img-form ref="imgForm" :prNumStorage="numStorage" :id="evId" :preview="prevImgUrl" @uploaded="getImgUrl" />
                 <div class="form-group">
                     <label class="col-10">
                         <p>案内文</p>
@@ -33,13 +32,18 @@
                     <label class="col-10">
                         <p>参加者</p>
                         <select name="join" :size="arrGuests.length" class="form-control" multiple>
-                            <option v-for="guest in arrGuests" :key="guest.id" :value="guest.id" :label="guest.name + ' / ' + guest.salonName"></option>
+                            <option v-for="guest in arrGuests" :key="guest.id" :value="guest.id" :label="guest.name + ' / ' + guest.salonName + (guest.status.preJoin? '(承認待ち)': '')"></option>
                         </select>
                         <div class="mt-1 d-flex">
                             <add-guest-window @click="getNewGuests"/>
-                            <red-button @click="click" :disabled="true">招待取消</red-button>
                         </div>
                     </label>
+                </div>
+                <div class="form-group">
+                    <div class="col-10 d-flex">
+                        <pink-button @click="saveClick">{{ saveStr }}</pink-button>
+                        <delete-button @click="deleteClick" :disable="!deleteAble">イベントを削除</delete-button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -48,11 +52,11 @@
 <script>
 import { db } from '@/firebase/firestore'
 import format from '@/scripts/eventsFormat.json'
-import { formatDate, bqDateParse, copyObjectReactive } from '@/scripts/functions'
+import { formatDate, copyObjectReactive } from '@/scripts/functions'
 import UploadImgForm from '@/components/UploadImgForm'
 import { storageNumbers } from '@/scripts/picture'
-import RedButton from '@/components/RedButton'
-//import BlueButton from '@/components/BlueButton'
+import PinkButton from '@/components/PinkButton'
+import DeleteButton from '@/components/DeleteButton'
 import AddGuestWindow from '@/components/AddGuestWindow'
 
     export default {
@@ -67,16 +71,22 @@ import AddGuestWindow from '@/components/AddGuestWindow'
         },
         components: {
             UploadImgForm,
-            RedButton,
-            //BlueButton,
-            AddGuestWindow
+            AddGuestWindow,
+            PinkButton,
+            DeleteButton
         },
         computed: {
             titleTxt: function () {
                 return this.evId == 'sample'? 'イベントの新規作成': 'イベントの編集'
             },
+            saveStr: function () {
+                return this.evId == 'sample'? 'イベントを追加': 'イベントの更新'
+            },
             evId: function () {
                 return this.prEvId
+            },
+            deleteAble: function () {
+                return this.evId == 'sample'? false: true
             },
             consultantName: {
                 set: function (val) {
@@ -88,11 +98,17 @@ import AddGuestWindow from '@/components/AddGuestWindow'
             },
             date: {
                 set: function (val) {
-                    this.objEventData.date = bqDateParse(val)
+                    this.$set(this.objEventData, 'date', new Date(val))
                 },
                 get: function () {
                     if(this.objEventData.date != '2021-01-01'){
-                        return formatDate(this.objEventData.date.toDate(), '-')
+                        //firebaseから帰ってくる日付データが独自Objectのためparse処理を分岐
+                        try{
+                            return formatDate(this.objEventData.date.toDate(), '-')
+                        } catch {
+                            return formatDate(this.objEventData.date, '-')
+                        }
+                        
                     } else {
                         return this.objEventData.date
                     }
@@ -188,10 +204,10 @@ import AddGuestWindow from '@/components/AddGuestWindow'
             },
             dateStr: {
                 set: function (val) {
-                    this.objEventData.date = new Date(val)
+                    this.$set(this.objEventData, 'date', new Date(val))
                 },
                 get: function () {
-                    return formatDate(this.objEventData.toDate(), '-')
+                    return formatDate(this.objEventData.date.toDate(), '-')
                 }
             }
         },
@@ -210,7 +226,6 @@ import AddGuestWindow from '@/components/AddGuestWindow'
                     const docRef = db.collection('events').doc(this.evId)
                     docRef.get().then(doc => {
                         if(doc.exists){
-                            //this.objEventData = doc.data()
                             copyObjectReactive(doc.data(), this.objEventData, this)
                             this.prevImgUrl = doc.get('imgUrl')
                         }
@@ -219,25 +234,37 @@ import AddGuestWindow from '@/components/AddGuestWindow'
                 })
             },
             getImgUrl: function (url) {
+                console.log('URL: ', url)
                 this.imgUrl = url
             },
             saveClick: async function () {
-                await this.$refs.child.$emit('uploadImg')
-                //TODO: データを作るorアップデートする
+                this.$set(this.objEventData, 'upDate', new Date())
+                await this.$refs.imgForm.uploadImg()
                 const docRef = db.collection('events')
                 docRef.doc(this.evId).get().then(doc => {
                     if(doc.exists){
-                        docRef.doc(this.evId).upDate(this.objEventData)
+                        docRef.doc(this.evId).update(this.objEventData)
                     } else {
                         docRef.add(this.objEventData)
                     }
                 }).catch(e => {
                     console.log('データの更新に失敗しました', e)
-                    alert('イベントデータの' + this.evId != '' || this.evId !== 'undefined'? '更新': '追加' + 'に失敗しました')
+                    alert('イベントデータの' + (this.evId != '' || this.evId !== 'undefined'? '更新': '追加') + 'に失敗しました')
                 })
             },
+            deleteClick: async function () {
+                /* TODO: 確認ダイアログ
+                const docRef = db.collection('events').doc(this.evId)
+                await docRef.delete()
+                */
+                alert('イベント【' + this.title + '】を削除しました')
+                //TODO: フォームクリア
+            },
             getGuestsName: async function () {
+                this.arrGuests.splice(0)
                 const docRef = db.collection('consultants')
+                var wkArray = new Array()
+                //参加承認済
                 for(let i = 0; i < this.join.length; i++){
                     let query = docRef.where('uid', '==', this.join[i])
                     await query.get().then(docSnap => {
@@ -245,18 +272,48 @@ import AddGuestWindow from '@/components/AddGuestWindow'
                             let objGuest = {
                                 id: doc.id,
                                 name: doc.get('consulName'),
-                                salonName: doc.get('salonName')
+                                salonName: doc.get('salonName'),
+                                status: {
+                                    join: true,
+                                    preJoin: false
+                                }
                             }
-                            this.arrGuests.push(objGuest)
+                            wkArray.push(objGuest)
                         })
                     })
                 }
-            },
-            click: function () {
-                alert('ボタンクリック')
+                //招待承認待ち
+                for(let i = 0; i < this.preJoin.length; i++){
+                    let query = docRef.where('uid', '==', this.preJoin[i])
+                    await query.get().then(docSnap => {
+                        docSnap.forEach(doc => {
+                            let objGuest = {
+                                id: doc.id,
+                                name: doc.get('consulName'),
+                                salonName: doc.get('salonName'),
+                                status: {
+                                    join: false,
+                                    preJoin: true
+                                }
+                            }
+                            wkArray.push(objGuest)
+                        })
+                    })
+                }
+                this.arrGuests = wkArray.slice()
             },
             getNewGuests: function (val) {
-                console.log('追加するゲスト: ', val)
+                val.forEach(guest => {
+                    var wkArray = new Array()
+                    if(!(this.preJoin.includes(guest)|| this.join.includes(guest))){
+                        wkArray.push(guest)
+                    }
+                    this.preJoin = wkArray.slice()
+                })
+                this.getGuestsName()
+            },
+            strStatus: function (pre) {
+                return pre? '(承認待ち)': ''
             }
         },
         mounted: async function () {

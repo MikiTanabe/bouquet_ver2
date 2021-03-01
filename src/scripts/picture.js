@@ -1,4 +1,4 @@
-import { fsRef, fs } from '@/firebase/firestore'
+import { fsRef } from '@/firebase/firestore'
 //import { getUser } from '@/scripts/user'
 
 export const storageNumbers = {
@@ -44,16 +44,13 @@ export async function getBase64(file) {
 //イベントイメージアップロード
 export async function uploadEventImage(id, img) {
     return new Promise((resolve, reject) => {
-        var uploadTask = fsRef.child('events/' + id).put(img)
-        uploadTask.on(fs.TaskEvent.STAGE_CHANGED,{},
-            error => {
-                reject(error)
-            },
-            () => {
-                uploadTask.snapshot.ref.getDownloadURL().then(url => {
-                    resolve(url)
-                })
-            }
-        )
+        const strageRef = fsRef.child('events/' + id)
+        strageRef.put(img).then(snapShot => {
+            snapShot.ref.getDownloadURL().then(url => {
+                resolve(url)
+            })
+        }).catch(() => {
+            reject()
+        })
     })
 }

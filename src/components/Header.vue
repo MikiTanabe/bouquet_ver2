@@ -1,5 +1,5 @@
 <template>
-        <header class="stickey-top">
+        <header class="sticky-top">
             <div class="col-12 d-flex align-items-end">
                 <div class="d-flex flex-column justify-content-start">
                     <p class="small md-medium">イメージコンサルティングのイベント・サロン交流サイト</p>
