@@ -5,9 +5,9 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'jquery/dist/jquery'
 import jQuery from 'jquery/dist/jquery'
-global.jquery = jQuery
-global.$ = jQuery
-window.$ = window.jQuery = require('jquery/dist/jquery')
+//global.jquery = jQuery
+//global.$ = jQuery
+window.$ = window.jQuery = require('jquery')
 import 'popper.js/dist/umd/popper'
 import 'bootstrap/dist/js/bootstrap'
 import BootstrapVue from 'bootstrap-vue'
@@ -19,8 +19,6 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(fas, far, fab)
 Vue.component('fa-icon', FontAwesomeIcon)
-//Vue.use(BootstrapVue)
-//Vue.use(router)
 
 Vue.config.productionTip = false
 

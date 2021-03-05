@@ -67,7 +67,7 @@
                 } else {
                     this.imgErrorMsg = checked.errorMsg
                 }
-            },
+            },//TODO: 新規作成の際のIDの取得
             uploadImg: async function () {
                 switch(this.prNumStorage) {
                     case storageNumbers.EVENT: {

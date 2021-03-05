@@ -1,22 +1,20 @@
 <template>
     <div>
-        <div>
-            <div class="modal fade" :id="target" tabindex="-1" >
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header" v-if="windowTitle!=''">
-                            <h5 class="modal-title">{{ windowTitle }}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                ×
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <slot />
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn-gray" data-dismiss="modal">閉じる</button>
-                            <button v-if="btn2" type="button" class="btn-green" @click="click">{{ btn2Txt }}</button>
-                        </div>
+        <div class="modal fade" :id="target" tabindex="-1" >
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" v-if="windowTitle!=''">
+                        <h5 class="modal-title">{{ windowTitle }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            ×
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <slot />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-gray" data-dismiss="modal">閉じる</button>
+                        <button v-if="btn2" type="button" class="btn-green" @click="click">{{ btn2Txt }}</button>
                     </div>
                 </div>
             </div>
@@ -24,7 +22,6 @@
     </div>
 </template>
 <script>
-    //モーダル部分を使いまわせるようにする(ボタンもdata-targetを使いまわせるようにする)
     export default {
         name: 'ModalWindow',
         data() {

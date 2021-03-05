@@ -1,6 +1,7 @@
 <template>
     <div>
-        <button type="button" @click="click" :disabled="disable"><p><slot /></p></button>
+        <button v-if="!modal" type="button" @click="click" :disabled="disable"><p><slot /></p></button>
+        <button v-if="modal" type="button" data-toggle="modal" :data-target="'#' + target" :disabled="disable" @click="click"><slot /></button>
     </div>
 </template>
 <script>
@@ -8,6 +9,14 @@
         name: 'DeleteButton',
         props: {
             disable: {
+                type: Boolean,
+                default: false
+            },
+            target: {
+                type: String,
+                default: 'modal-window'
+            },
+            modal: {
                 type: Boolean,
                 default: false
             }

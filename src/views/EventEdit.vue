@@ -42,7 +42,8 @@
                 <div class="form-group">
                     <div class="col-10 d-flex">
                         <pink-button @click="saveClick">{{ saveStr }}</pink-button>
-                        <delete-button @click="deleteClick" :disable="!deleteAble">イベントを削除</delete-button>
+                        <!-- <delete-button @click="deleteClick" :disable="!deleteAble">イベントを削除</delete-button> -->
+                        <notice-delete-window @click="deleteClick" :deleteAble="deleteAble" :prEvTitle="title"/>
                     </div>
                 </div>
             </form>
@@ -56,8 +57,9 @@ import { formatDate, copyObjectReactive } from '@/scripts/functions'
 import UploadImgForm from '@/components/UploadImgForm'
 import { storageNumbers } from '@/scripts/picture'
 import PinkButton from '@/components/PinkButton'
-import DeleteButton from '@/components/DeleteButton'
 import AddGuestWindow from '@/components/AddGuestWindow'
+import NoticeDeleteWindow from '@/components/NoticeDeleteWindow'
+import { getUser } from '@/scripts/user'
 
     export default {
         name: 'EventEdit',
@@ -73,7 +75,7 @@ import AddGuestWindow from '@/components/AddGuestWindow'
             UploadImgForm,
             AddGuestWindow,
             PinkButton,
-            DeleteButton
+            NoticeDeleteWindow
         },
         computed: {
             titleTxt: function () {
@@ -239,10 +241,20 @@ import AddGuestWindow from '@/components/AddGuestWindow'
             },
             saveClick: async function () {
                 this.$set(this.objEventData, 'upDate', new Date())
+                if(!Array.isArray(this.preJoin)){
+                    this.preJoin = new Array()
+                }
+                if(!Array.isArray(this.join)){
+                    this.join = new Array()
+                }
                 await this.$refs.imgForm.uploadImg()
                 const docRef = db.collection('events')
+                
                 docRef.doc(this.evId).get().then(doc => {
-                    if(doc.exists){
+                    if(this.evId=='sample'){
+                        this.uid = getUser().get('uid')
+                        docRef.add(this.objEventData)
+                    } else if(doc.exists) {
                         docRef.doc(this.evId).update(this.objEventData)
                     } else {
                         docRef.add(this.objEventData)
@@ -253,12 +265,10 @@ import AddGuestWindow from '@/components/AddGuestWindow'
                 })
             },
             deleteClick: async function () {
-                /* TODO: 確認ダイアログ
                 const docRef = db.collection('events').doc(this.evId)
                 await docRef.delete()
-                */
                 alert('イベント【' + this.title + '】を削除しました')
-                //TODO: フォームクリア
+                this.$router.push('mypagehome').catch({})
             },
             getGuestsName: async function () {
                 this.arrGuests.splice(0)

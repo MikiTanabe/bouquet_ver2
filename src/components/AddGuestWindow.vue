@@ -45,10 +45,9 @@
             click: function () {
                 if(this.arrNewGuest.length < 1) {
                     alert('追加するゲストユーザーを選択してください')
-                    //TODO: ウィンドウを閉じない
                 } else {
+                    //TODO: $エラー
                     const modalName = '#' + this.targetName
-                    console.log('選択したユーザー: ', this.arrNewGuest)
                     this.$emit('click', this.arrNewGuest.concat())
                     this.arrNewGuest.splice(0)
                     this.arrUsers.splice(0)
