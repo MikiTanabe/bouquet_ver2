@@ -1,9 +1,11 @@
 <template>
-    <div class="col-6">
-        <div class="info-box px-1">
-            <p class="mb-n1 small">Information<fa-icon :icon="['fas', 'exclamation']" class="exclamation" /></p>
-            <div>
-                <p class="mb-n1">{{ message }}</p>
+    <div class="row">
+        <div class="col-12 col-md-10">
+            <div class="info-box px-1">
+                <p class="mb-n1 small text-nowrap">Information<fa-icon :icon="['fas', 'exclamation']" class="exclamation" /></p>
+                <div>
+                    <p class="mb-n1 text-nowrap">{{ message }}</p>
+                </div>
             </div>
         </div>
     </div>

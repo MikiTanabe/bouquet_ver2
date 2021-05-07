@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="mypage-container">
-            <div class="medium-menubar d-none d-lg-block">
+            <div class="medium-menubar d-none d-md-block">
                 <menu-left-bar />
             </div>
             <div class="mypage-content">
@@ -42,7 +42,7 @@
         
     }
 
-    @media screen and (min-width: 992px){
+    @media screen and (min-width: 768px){
         .mypage-container {
             display: grid;
             grid-template-columns: 15% 85%;

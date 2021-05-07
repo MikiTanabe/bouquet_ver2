@@ -12,8 +12,19 @@ header {
     width: 100%;
 }
 
+footer {
+    background-color: #b3b3ff;
+    height: 4em;
+    font-family: 'M PLUS 1p', sans-serif;
+    width: 100%;
+}
+
 header p {
     color: dimgray;
+}
+
+.container {
+    padding-top: 6em;
 }
 
 /** ボタン **/
@@ -48,24 +59,38 @@ button:disabled {
 }
 
 /* 見出し要素 */
-h1 {
+#title h1 {
     color: #882954;
     font-family: 'M PLUS 1p', sans-serif;
-    font-size: 1.5em;
+    font-weight: bold;
+    font-size: 1.4em;
+}
+
+#title h2 {
+    color: #882954;
+    font-family: 'M PLUS 1p', sans-serif;
+    font-size: 1.3em;
     font-weight: bold;
 }
 
-h2 {
+#title h3 {
     color: #882954;
     font-family: 'M PLUS 1p', sans-serif;
     font-size: 1.2em;
     font-weight: bold;
 }
 
-h3 {
+#title h4 {
     color: #882954;
     font-family: 'M PLUS 1p', sans-serif;
-    font-size: 0.8em;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+#title h6 {
+    color: #882954;
+    font-family: 'M PLUS 1p', sans-serif;
+    font-size: 1em;
     font-weight: bold;
 }
 
@@ -76,24 +101,27 @@ h3 {
 
 /* リンク装飾 */
 .notice-link {
-    color: #c73576;
-    border-bottom: 1px solid #c73576;
+    color: #c73576!important;
+    text-decoration: underline;
 }
 
-.notice-link :active {
-    color: #7c294f;
-    border-bottom: none;
+.notice-link:hover {
+    color: #eca0c2!important;
+    text-decoration: none;
 }
 
-.notice-link :hover {
-    color: #c73576;
-    border-bottom: 1px #c73576;
+.active {
+    color: black;
+}
+
+.active:hover {
+    color: dimgray;
+    text-decoration: none;
 }
 
 /* テーブル */
-
 .table-palepink th {
-    background-color: #e3b3cd;
+    background-color: lavender;
     font-weight: normal;
 }
 

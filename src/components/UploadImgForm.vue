@@ -69,10 +69,23 @@
                 }
             },//TODO: 新規作成の際のIDの取得
             uploadImg: async function () {
+                console.log('画像アップロード発火')
                 switch(this.prNumStorage) {
                     case storageNumbers.EVENT: {
-                        let imgUrl = await uploadEventImage(this.id, this.imgFile)
-                        this.$emit('uploaded', imgUrl)
+                        return new Promise((resolve, reject) => {
+                            //TODO: 画像がアップロードされていない場合の処理
+                            if(this.imgFile==null) {
+                                resolve()
+                            } else {
+                                uploadEventImage(this.id, this.imgFile).then(url => {
+                                    resolve(url)
+                                }).catch(() => {
+                                    reject()
+                                })
+                                //this.$emit('uploaded', imgUrl)
+                            }
+                        })
+                        
                     }
                 }
             }

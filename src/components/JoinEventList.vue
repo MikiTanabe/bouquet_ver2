@@ -1,23 +1,32 @@
 <template>
     <div>
-        <table class="table-sm table-palepink col-12 col-md-10">
-            <thead>
-                <tr>
-                    <th class="title-title">イベント名</th>
-                    <th class="title-date">開催日</th>
-                    <th class="d-none d-md-table-cell title-caption">キャプション</th>
-                    <th class="title-host">主催者</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="event in arrEvents" :key="event.id">
-                    <td><a href="javascript:void(0)" @click="titleClick(event.id)" class="notice-link">{{ event.title }}</a></td>
-                    <td><p class="text-nowrap">{{ event.date }}</p></td>
-                    <td class="d-none d-md-table-cell"><p class="caption">{{ event.introduction }}</p></td>
-                    <td>{{ event.hostName }} <span v-if="event.hostSalon!=''&&event.hostSalon!=='undefined'">/ {{ event.hostSalon }}</span></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="row" v-if="arrEvents.length<1">
+            <div class="col-12">
+                <p>参加予定のイベントはありません。</p>
+            </div>
+        </div>
+        <div class="row" v-if="arrEvents.length>=1">
+            <div class="col-12">
+                <table class="table-sm table-palepink">
+                    <thead>
+                        <tr class="text-center">
+                            <th class="title-title">イベント名</th>
+                            <th class="title-date">開催日</th>
+                            <th class="d-none d-lg-table-cell title-caption">キャプション</th>
+                            <th class="d-none d-md-table-cell title-host">主催者</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="event in arrEvents" :key="event.id">
+                            <td class="col-7"><a href="javascript:void(0)" @click="titleClick(event.id)" class="notice-link">{{ event.title }}</a></td>
+                            <td><p class="text-nowrap">{{ event.date }}</p></td>
+                            <td class="d-none d-lg-table-cell"><p class="caption">{{ event.introduction }}</p></td>
+                            <td class="d-none d-md-table-cell">{{ event.hostName }} <span v-if="event.hostSalon!=''&&event.hostSalon!=='undefined'">/ {{ event.hostSalon }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -30,7 +39,7 @@
         name: 'JoinEventList',
         data() {
             return {
-                uid: getUser().get('id'),
+                uid: '',
                 arrEvents: () => {[]}
             }
         },
@@ -73,11 +82,10 @@
                 this.$router.push(objLink).catch({})
             }
         },
-        created() {
+        mounted: async function () {
+            const user = new Map(await getUser())
+            this.uid = user.get('id')
             this.setEventsList()
-        },
-        mounted() {
-            this.uid = getUser().get('id')
         }
     }
 </script>

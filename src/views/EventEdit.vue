@@ -1,53 +1,95 @@
 <template>
     <div>
-        <div class="col-12">
-            <h3>{{ titleTxt }}</h3>
-            <form>
-                <div class="form-group">
-                    <label class="col-12 col-md-10">
+        <div class="row">
+            <div class="col-12">
+                <h3>{{ titleTxt }}</h3>
+            </div>
+        </div>
+        <form>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-12" for="title">
                         <p>イベント名</p>
-                        <input type="text" id="title" class="form-control" placeholder="新規イベント" v-model="title">
                     </label>
                 </div>
-                <div class="form-group">
-                    <label class="col-10">
+                <div class="row">
+                    <div class="col-12 col-md-10">
+                        <input type="text" name="title" id="title" class="form-control" placeholder="新規イベント" v-model="title">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-12">
                         <p>開催日</p>
+                    </label>
+                </div>
+                <div class="row">
+                    <div class="col-7 col-md-4">
                         <input type="date" id="date" class="form-control" v-model="date">
-                    </label>
+                    </div>
                 </div>
+            </div>
+            <div class="row">
                 <upload-img-form ref="imgForm" :prNumStorage="numStorage" :id="evId" :preview="prevImgUrl" @uploaded="getImgUrl" />
-                <div class="form-group">
-                    <label class="col-10">
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-12" for="introduction">
                         <p>案内文</p>
-                        <textarea id="introduction" v-model="introduction" class="form-control"></textarea>
                     </label>
                 </div>
-                <div class="form-group">
-                    <label class="col-10">
+                <div class="row">
+                    <div class="col-12">
+                        <textarea id="introduction" name="introduction" v-model="introduction" class="form-control" rows="10"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-12" for="txt-url">
                         <p>イベントURL(Youtubeチャンネル、イベント告知ページ等)</p>
-                        <input type="text" id="txt-url" class="form-control" v-model="txtUrl" placeholder="https://">
                     </label>
                 </div>
-                <div class="form-group">
-                    <label class="col-10">
+                <div class="row">
+                    <div class="col-12">
+                        <input type="text" name="txt-url" id="txt-url" class="form-control" v-model="txtUrl" placeholder="https://">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-12" for="join">
                         <p>参加者</p>
+                    </label>
+                </div>
+                <div class="row">
+                    <div class="col-12">
                         <select name="join" :size="arrGuests.length" class="form-control" multiple>
                             <option v-for="guest in arrGuests" :key="guest.id" :value="guest.id" :label="guest.name + ' / ' + guest.salonName + (guest.status.preJoin? '(承認待ち)': '')"></option>
                         </select>
-                        <div class="mt-1 d-flex">
-                            <add-guest-window @click="getNewGuests"/>
-                        </div>
-                    </label>
+                    </div>
                 </div>
-                <div class="form-group">
+                <div class="row">
+                    <div class="col-12 mt-1 d-flex">
+                        <add-guest-window @click="getNewGuests"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
                     <div class="col-10 d-flex">
                         <pink-button @click="saveClick">{{ saveStr }}</pink-button>
-                        <!-- <delete-button @click="deleteClick" :disable="!deleteAble">イベントを削除</delete-button> -->
                         <notice-delete-window @click="deleteClick" :deleteAble="deleteAble" :prEvTitle="title"/>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <return-link :prpReturnText="'mypagehome'">>>マイページトップへ戻る</return-link>
+                </div>
+            </div>
+        </form>
     </div>
 </template>
 <script>
@@ -59,7 +101,9 @@ import { storageNumbers } from '@/scripts/picture'
 import PinkButton from '@/components/PinkButton'
 import AddGuestWindow from '@/components/AddGuestWindow'
 import NoticeDeleteWindow from '@/components/NoticeDeleteWindow'
+import ReturnLink from '@/components/ReturnLink'
 import { getUser } from '@/scripts/user'
+import { getConsultantData } from '@/scripts/consultant'
 
     export default {
         name: 'EventEdit',
@@ -75,7 +119,8 @@ import { getUser } from '@/scripts/user'
             UploadImgForm,
             AddGuestWindow,
             PinkButton,
-            NoticeDeleteWindow
+            NoticeDeleteWindow,
+            ReturnLink
         },
         computed: {
             titleTxt: function () {
@@ -103,7 +148,7 @@ import { getUser } from '@/scripts/user'
                     this.$set(this.objEventData, 'date', new Date(val))
                 },
                 get: function () {
-                    if(this.objEventData.date != '2021-01-01'){
+                    if(this.objEventData.date != this.defaultDate){
                         //firebaseから帰ってくる日付データが独自Objectのためparse処理を分岐
                         try{
                             return formatDate(this.objEventData.date.toDate(), '-')
@@ -174,7 +219,7 @@ import { getUser } from '@/scripts/user'
             },
             title: {
                 set: function (val) {
-                    this.$set(this.objEventData, 'salonName', val)
+                    this.$set(this.objEventData, 'title', val)
                 },
                 get: function () {
                     return this.objEventData.title
@@ -211,6 +256,9 @@ import { getUser } from '@/scripts/user'
                 get: function () {
                     return formatDate(this.objEventData.date.toDate(), '-')
                 }
+            },
+            defaultDate: function () {
+                return formatDate(new Date(), '-')
             }
         },
         props: {
@@ -236,7 +284,6 @@ import { getUser } from '@/scripts/user'
                 })
             },
             getImgUrl: function (url) {
-                console.log('URL: ', url)
                 this.imgUrl = url
             },
             saveClick: async function () {
@@ -247,22 +294,20 @@ import { getUser } from '@/scripts/user'
                 if(!Array.isArray(this.join)){
                     this.join = new Array()
                 }
-                await this.$refs.imgForm.uploadImg()
                 const docRef = db.collection('events')
-                
-                docRef.doc(this.evId).get().then(doc => {
-                    if(this.evId=='sample'){
-                        this.uid = getUser().get('uid')
-                        docRef.add(this.objEventData)
-                    } else if(doc.exists) {
-                        docRef.doc(this.evId).update(this.objEventData)
+                await docRef.doc(this.evId).get().then(doc => {
+                    if(doc.exists && this.evId!='sample'){
+                        this.updateEvent()
+                        .then(() => { alert('イベントデータを更新しました')})
                     } else {
-                        docRef.add(this.objEventData)
+                        this.addEvent()
+                        .then(() => { alert('イベントを新規登録しました') })
                     }
                 }).catch(e => {
                     console.log('データの更新に失敗しました', e)
                     alert('イベントデータの' + (this.evId != '' || this.evId !== 'undefined'? '更新': '追加') + 'に失敗しました')
                 })
+                this.$router.push('/mypage/mypagehome').catch({})
             },
             deleteClick: async function () {
                 const docRef = db.collection('events').doc(this.evId)
@@ -294,7 +339,7 @@ import { getUser } from '@/scripts/user'
                 }
                 //招待承認待ち
                 for(let i = 0; i < this.preJoin.length; i++){
-                    let query = docRef.where('uid', '==', this.preJoin[i])
+                    let query = docRef.where('uid', '==', String(this.preJoin[i]))
                     await query.get().then(docSnap => {
                         docSnap.forEach(doc => {
                             let objGuest = {
@@ -322,13 +367,70 @@ import { getUser } from '@/scripts/user'
                 })
                 this.getGuestsName()
             },
-            strStatus: function (pre) {
-                return pre? '(承認待ち)': ''
+            addEvent: async function () {
+                console.log(this.uid)
+                return new Promise((resolve, reject) => {
+                    const docRef = db.collection('events')
+                    this.setConsultantData()
+                    .then(() => {
+                        docRef.add(this.objEventData)
+                    }).then(
+                        this.$refs.imgForm.uploadImg()
+                    ).then(
+                        docRef.doc(this.evId).update({
+                            imgUrl: this.imgUrl
+                        })
+                    ).then(() => {
+                        resolve()
+                    })
+                    .catch(() => {
+                        reject()
+                    })
+                })
+            },
+            updateEvent: async function () {
+                return new Promise((resolve, reject) => {
+                    const docRef = db.collection('events')
+                    this.setConsultantData()
+                    .then(
+                        this.$refs.imgForm.uploadImg()
+                    .then(url =>
+                        this.getImgUrl(url)
+                    )).then(() => {
+                        docRef.doc(this.evId).update(this.objEventData)
+                    }).then(() => {
+                        resolve()
+                    }).catch(() => {
+                        reject()
+                    })
+                })
+            },
+            setConsultantData: async function () {
+                return new Promise((resolve, reject) => {
+                    getUser().then(mapUser => {
+                        this.uid = mapUser.get('id')
+                    }).then(() => getConsultantData(this.uid)
+                    ).then(mapConsultant => {
+                        this.consultantName = mapConsultant.get('name')
+                        this.salonName = mapConsultant.get('salonName')
+                    }).then(() => {
+                        resolve()
+                    }).catch(() => {
+                        reject()
+                    })
+                })
             }
         },
         mounted: async function () {
             await this.getEventData()
             await this.getGuestsName()
+            const user = await getUser()
+            await getConsultantData(user.get('id'))
+        },
+        created() {
+            //TODO: デフォルト日付を本日日付にする
+            this.$set(this.objEventData, 'date', this.defaultDate)
+            console.log('セット後の日付: ', this.date)
         }
     }
 </script>

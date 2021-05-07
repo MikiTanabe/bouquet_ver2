@@ -9,3 +9,9 @@ export async function signOut() {
         })
     })
 }
+
+export function checkAuth() {
+    auth().onAuthStateChanged(user => {
+        return user? true: false
+    })
+}

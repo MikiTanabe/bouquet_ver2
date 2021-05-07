@@ -1,14 +1,16 @@
 <template>
-    <div class="row">
-        <div class="col-12">
-            <h2>マイページトップ</h2>
-            <information-bar />
-            <h3 class="mt-4">参加予定のイベント</h3>
-            <join-event-list />
-            <h3 class="mt-4">主催イベント</h3>
-            <hold-event-list />
-            <!-- サロンパネル作成、設置 <salon-info-panel /> -->
+    <div>
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-nowrap">マイページトップ</h1>
+            </div>
         </div>
+        <information-bar />
+        <h2 class="mt-4">参加予定のイベント</h2>
+        <join-event-list />
+        <h2 class="mt-4">主催イベント</h2>
+        <hold-event-list />
+        <!-- サロンパネル作成、設置 <salon-info-panel /> -->
     </div>
 </template>
 <script>
@@ -25,3 +27,5 @@
         }
     }
 </script>
+<style>
+</style>

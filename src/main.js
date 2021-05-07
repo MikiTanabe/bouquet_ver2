@@ -4,7 +4,7 @@ import router from './router'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'jquery/dist/jquery'
-import jQuery from 'jquery/dist/jquery'
+//import jQuery from 'jquery/dist/jquery'
 //global.jquery = jQuery
 //global.$ = jQuery
 window.$ = window.jQuery = require('jquery')
@@ -26,4 +26,5 @@ new Vue({
   BootstrapVue,
   router,
   render: h => h(App),
+  linkActiveClass: "menu-link",
 }).$mount('#app')

@@ -44,13 +44,21 @@ export async function getBase64(file) {
 //イベントイメージアップロード
 export async function uploadEventImage(id, img) {
     return new Promise((resolve, reject) => {
-        const strageRef = fsRef.child('events/' + id)
-        strageRef.put(img).then(snapShot => {
-            snapShot.ref.getDownloadURL().then(url => {
-                resolve(url)
+        var noImage
+        fsRef.child('/events/event-no-image.jpg').getDownloadURL().then(url => {
+            noImage = url
+        }).then(() => {
+            const strageRef = fsRef.child('events/' + id)
+            strageRef.put(img).then(snapShot => {
+                snapShot.ref.getDownloadURL().then(url => {
+                    resolve(url)
+                }).catch(() => {
+                    resolve(noImage)
+                })
             })
         }).catch(() => {
             reject()
         })
+        
     })
 }

@@ -1,23 +1,45 @@
 <template>
-    <div class="col-12">
-        <p class="small" v-if="user !== 'undefined'">{{ greet }}</p>
-        <h2 class="font-h2">メニュー</h2>
-        <ul>
-            <li>イベントの管理</li>
-            <li>コンサルタントプロフィール</li>
-            <li>マイサロン</li>
-            <li>アカウント情報</li>
-            <li class="mt-1"><a href="javascript:void(0)" @click="signout" class="notice-link">サインアウト</a></li>
-        </ul>
-        <h2 class="font-h2">管理メニュー</h2>
-        <ul>
-            <li>お問い合わせ</li>
-            <li>運営からのお知らせ</li>
-            <li>
-                <fa-icon :icon="['fab', 'instagram-square']" class="icon mr-2" />
-                <fa-icon :icon="['fab', 'twitter']" color="#1DA1F2" class="icon " />
-            </li>
-        </ul>
+    <div class="ml-n3 pr-2">
+        <div class="row">
+            <div class="col-12">
+                <p class="small" v-if="user !== 'undefined'">{{ greet }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                    <h6>メニュー</h6>
+            </div>
+        </div>
+        <div id="menu-link">
+            <div class="row">
+                <div class="col-12">
+                    <ul>
+                        <li><router-link to="eventtop" class="active">イベントの管理</router-link></li>
+                        <li>コンサルタントプロフィール</li>
+                        <li>マイサロン</li>
+                        <li>アカウント情報</li>
+                        <li class="mt-1"><a href="javascript:void(0)" @click="signout" class="notice-link">サインアウト</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <h6>管理メニュー</h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <ul>
+                        <li>お問い合わせ</li>
+                        <li>運営からのお知らせ</li>
+                        <li>
+                            <fa-icon :icon="['fab', 'instagram-square']" class="icon mr-2" />
+                            <fa-icon :icon="['fab', 'twitter']" color="#1DA1F2" class="icon " />
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -37,7 +59,7 @@
                     return this.user.get('id')
                 },
                 set: function (newVal) {
-                    this.user.set('id', newVal)
+                    this.$set(this.user, 'id', newVal)
                 }
             },
             userName: {
@@ -45,7 +67,7 @@
                     return this.user.get('name')
                 },
                 set: function (newVal) {
-                    this.user.set('name', newVal)
+                    this.$set(this.user, 'name', newVal)
                 }
             },
             greet: function () {
@@ -75,18 +97,32 @@
                 })
             }
         },
-        mounted() {
-            this.user = getUser()
+        mounted: async function () {
+            this.user = await getUser()
         }
     }
 </script>
-<style>
+<style scoped>
     li {
         list-style: none;
-        margin-left: -1.5em;
+        margin-left: -2.5em;
     }
 
     .icon {
         font-size: 1.8em;
+    }
+
+    #menu-link li {
+        font-size: 0.9em;
+    }
+
+    @media screen and (min-width: 768px){
+        #menu-link li {
+            font-size: normal;
+        }
+    }
+
+    .greet {
+        
     }
 </style>
