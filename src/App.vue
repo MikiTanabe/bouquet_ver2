@@ -23,4 +23,5 @@ export default {
 
 <style>
   @import 'css/main.css';
+  @import 'css/scroll.css';
 </style>

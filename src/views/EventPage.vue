@@ -1,29 +1,37 @@
 <template>
-    <div class="row">
-        <div class="col-12">
-            <h3>{{ objEventData.title }}</h3>
+    <div>
+        <h3>{{ objEventData.title }}</h3>
+        <div class="row">
             <div class="col-12 mt-3 d-flex flex-column align-items-center">
-                <div class="col-5 d-flex">
+                <div class="col-10 col-md-6 d-flex">
                     <img :src="objEventData.imgUrl" class="img-fluid">
                 </div>
-                <div class="text-left col-12 mt-3 event-detail">
-                    <p>{{ objEventData.introduction }}</p>
-                </div>
             </div>
+        </div>
+        <div class="row">
+            <div class="text-left col-12 mt-3 event-detail">
+                <p>{{ objEventData.introduction }}</p>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-12">
                 <div class="col-5 col-md-3 col-lg-2 d-flex justify-content-center data-title-box">
                     <p class="my-auto">INFORMATION</p>
                 </div>
-                <div class="mt-1 data-box">
-                    <table class="table-sm table-clear">
-                        <tbody>
-                            <tr><td>開催日: </td><td>{{ objEventData.date }}</td></tr>
-                            <tr v-if="objEventData.txtUrl!='イベントURL'&&objEventData.txtUrl!=='undefined'"><td>イベントURL: </td><td>{{ objEventData.txtUrl }}</td></tr>
-                            <tr><td>主催者: </td><td><a href="javascript:void(0)" @click="hostClick(objEventData.uid)" class="notice-link">{{ objEventData.consultantName }}</a><span v-if="objEventData.salonName!='サロン名'"> / <a href="javascript:void(0)" @click="hostSalonClick" class="notice-link">{{ objEventData.salonName }}</a></span></td></tr>
-                        </tbody>
-                    </table>
-                </div>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-12 mt-1 data-box">
+                <table class="table-sm table-clear">
+                    <tbody>
+                        <tr><td>開催日: </td><td>{{ objEventData.date }}</td></tr>
+                        <tr v-if="objEventData.txtUrl!='イベントURL'&&objEventData.txtUrl!=='undefined'&&objEventData.txtUrl!=''"><td>イベントURL: </td><td>{{ objEventData.txtUrl }}</td></tr>
+                        <tr><td>主催者: </td><td><a href="javascript:void(0)" @click="hostClick(objEventData.uid)" class="notice-link">{{ objEventData.consultantName }}</a><span v-if="objEventData.salonName!='サロン名'"> / <a href="javascript:void(0)" @click="hostSalonClick" class="notice-link">{{ objEventData.salonName }}</a></span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-12 mt-3">
                 <h4 class="mb-3">参加者</h4>
                 <guest-list :prGuestList="guestsList" />
@@ -129,7 +137,7 @@
     h3 {
         color: black;
         border-bottom: 1px solid black;
-        width: 80%;
+        width: 100%;
     }
 
     h4 {
@@ -144,6 +152,7 @@
 
     .data-box {
         border-left: 1px solid #d06da3;
+        margin-left: 1em;
     }
 
     .data-title-box {
@@ -159,6 +168,16 @@
     @media screen and (min-width: 992px) {
         .data-title-box p {
             font-size: 1.5em;
+        }
+    }
+
+    @media screen and (min-width: 768px) {
+        h3 {
+            width: 80%;
+        }
+
+        .data-box {
+            padding-left: 0px;
         }
     }
 

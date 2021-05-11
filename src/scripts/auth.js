@@ -10,6 +10,7 @@ export async function signOut() {
     })
 }
 
+//使わないかも（うまく動かない）
 export function checkAuth() {
     auth().onAuthStateChanged(user => {
         return user? true: false

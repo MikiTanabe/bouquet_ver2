@@ -22,8 +22,8 @@
     </header>
 </template>
 <script>
-    //import firebase from '@/firebase/firestore'
-    import { signOut, checkAuth } from '@/scripts/auth'
+    import firebase from '@/firebase/firestore'
+    import { signOut } from '@/scripts/auth'
 
     export default {
         name: 'Header',
@@ -59,12 +59,9 @@
             }
         },
         mounted() {
-            /*
             firebase.auth().onAuthStateChanged(user => {
                 this.auth = user? true: false
             })
-            */
-            this.auth = checkAuth()
         }
     }
 </script>

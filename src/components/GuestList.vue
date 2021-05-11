@@ -1,7 +1,7 @@
 <template>
-    <div class="col-12 content-wrapper">
+    <div class="content-wrapper d-flex align-items-end">
         <div v-for="guest in arrGuests" :key="guest.id">
-            <div class="guest-wrapper col-4">
+            <div class="guest-wrapper col-12 col-md-5 d-flex flex-column">
                 <img :src="guest.profileImgUrl" class="img-fluid">
                 <p>
                     <a href="javascript:void(0)" @click="guestClick(guest.uid)" class="notice-link">{{ guest.consulName }}</a>
@@ -80,5 +80,7 @@
     }
 </script>
 <style scoped>
-    
+    p {
+        white-space: nowrap;
+    }
 </style>
